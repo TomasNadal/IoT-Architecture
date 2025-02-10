@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
-from sqlalchemy import text, func
+from sqlalchemy import text, func, desc
 from sqlalchemy.orm import Session
-import model as m
+import src.domain.model as m
 
 @dataclass
 class SignalSummary:
@@ -72,4 +72,31 @@ class SignalQueries:
             {"empresa_id": empresa_id}
         )
         
-        return [SignalSummary(*row) for row in result] 
+        return [SignalSummary(*row) for row in result]
+
+    def get_latest_by_controller(
+        self, 
+        controller_id: int,
+        limit: int = 1,
+        user_permissions: List[str] = None
+    ) -> List[m.Signal]:
+        """Get latest signals for a controller"""
+        return (self.session.query(m.Signal)
+                .filter(m.Signal.controlador_id == controller_id)
+                .order_by(desc(m.Signal.tstamp))
+                .limit(limit)
+                .all())
+
+    def get_signals_in_timeframe(
+        self,
+        controller_id: int,
+        start_time: datetime,
+        end_time: datetime
+    ) -> List[m.Signal]:
+        """Get signals within a timeframe"""
+        return (self.session.query(m.Signal)
+                .filter(m.Signal.controlador_id == controller_id)
+                .filter(m.Signal.tstamp >= start_time)
+                .filter(m.Signal.tstamp <= end_time)
+                .order_by(m.Signal.tstamp)
+                .all()) 

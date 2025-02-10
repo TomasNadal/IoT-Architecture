@@ -1,5 +1,5 @@
 import pytest
-import model as m
+import src.domain.model as m
 from sqlalchemy import text, insert, select
 from datetime import datetime
 from sqlalchemy.types import Float

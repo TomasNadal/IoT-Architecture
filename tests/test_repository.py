@@ -2,9 +2,9 @@ import pytest
 from datetime import datetime
 import json
 from sqlalchemy import text
-from repository import EmpresaRepository
-from queries import SignalQueries
-import model as m
+from src.adapters.repository import EmpresaRepository
+from src.queries.queries import SignalQueries
+import src.domain.model as m
 
 def test_repository_can_save_empresa(session):
     # Prepare
@@ -144,7 +144,7 @@ def test_repository_can_retrieve_empresa(session):
     # Setup
     empresa_id = insert_empresa(session)
     
-    # Exercise
+    # Exercises
     repo = EmpresaRepository(session)
     retrieved = repo.get(empresa_id)
     

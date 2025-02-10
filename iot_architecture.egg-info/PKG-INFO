@@ -1,0 +1,9 @@
+Metadata-Version: 2.2
+Name: iot-architecture
+Version: 0.1
+Requires-Dist: flask
+Requires-Dist: sqlalchemy
+Requires-Dist: psycopg2-binary
+Requires-Dist: python-jose
+Requires-Dist: python-dotenv
+Dynamic: requires-dist

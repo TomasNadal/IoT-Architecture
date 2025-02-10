@@ -1,5 +1,5 @@
 import pytest
-from model import User, Empresa, Controlador
+from src.domain.model import User, Empresa, Controlador
 
 def test_user():
     user = User("John", "Doe", "john.doe@example.com", "password", "1234567890")

@@ -1,9 +1,10 @@
-from sqlalchemy import Table, MetaData, Column, Integer, String, Date, ForeignKey, Float, DateTime
+from sqlalchemy import Table, MetaData, Column, Integer, String, Date, ForeignKey, Float, DateTime, JSON, Enum as SQLAEnum, ARRAY
 from sqlalchemy.dialects.postgresql import JSONB  # Import JSONB type
 from sqlalchemy.orm import registry, relationship, attribute_keyed_dict
 
 
-import model as m
+import src.domain.model as m
+from src.domain.model import Role
 
 '''
 Metadata contains information of the database schema
@@ -38,12 +39,14 @@ users = Table(
     'users',
     mapper_registry.metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('empresa_id', Integer, ForeignKey('empresas.id')),
+    Column('empresa_id', Integer, ForeignKey('empresas.id'), nullable=True),
     Column('first_name', String(255), nullable=False),
     Column('last_name', String(255), nullable=False),
     Column('email', String(255), nullable=False, unique=True),
-    Column('password', String(255), nullable=False),
-    Column('phone_number', String(20), nullable=True)
+    Column('password_hash', String(255), nullable=False),  # Changed from password to password_hash
+    Column('phone_number', String(20), nullable=True),
+    Column('role', SQLAEnum(Role), nullable=False),
+    Column('permissions', ARRAY(String), nullable=True)
 )
 
 empresas = Table(
@@ -90,6 +93,6 @@ def start_mappers():
         empresas,
         properties={
             "users": relationship(users_mapper, collection_class=list, back_populates="_empresa"),
-            "controladores": relationship(controladores_mapper, collection_class=list, back_populates="_empresa")
+            "controladores": relationship("Controlador", collection_class=list, back_populates="_empresa")
         }
     )

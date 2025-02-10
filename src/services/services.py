@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
-import model as m
-from repository import EmpresaRepository
-from queries import SignalQueries
+import src.domain.model as m
+from src.adapters.repository import EmpresaRepository
+from src.queries.queries import SignalQueries
 
 class SignalService:
     def __init__(
